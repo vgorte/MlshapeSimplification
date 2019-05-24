@@ -21,8 +21,8 @@ Takes 2 arguments:
 - Distribution type for randomization, either: 
    - `standard-normal` or `triangular`
 
-##Example
-- Open terminal / cmd
+## Example
+Open terminal / cmd
 
 ```bash
 python ShapeGenerator.py ../Shapes/Shape1.csv triangular
