@@ -15,9 +15,8 @@ pip install matplotlib
 
 Run the `ShapeGenerator.py` script, located in the Shapes directory via terminal / cmd.
 
-Takes 2 arguments:
+Takes 1 arguments:
 
-- Path to a shapefile
 - Distribution type for randomization, either: 
    - `standard-normal` or `triangular`
 
@@ -25,5 +24,5 @@ Takes 2 arguments:
 - Open terminal / cmd
 
 ```bash
-python ShapeGenerator.py ../Shapes/Shape1.csv triangular
+python ShapeGenerator.py triangular
 ```

@@ -1,6 +1,7 @@
 import sys
-import numpy as np
 import math
+import os, random
+import numpy as np
 import matplotlib.pyplot as plt
 
 
@@ -46,6 +47,10 @@ def extractAlteredCoordinates(shape, distType):
     return x, y
 
 
+def randomShapeFilePath():
+    return "../Shapes/" + random.choice(os.listdir("../Shapes"))
+
+
 def main(shapeFilePath, distType):
     shape = np.genfromtxt(shapeFilePath, delimiter=',')
 
@@ -61,6 +66,7 @@ def main(shapeFilePath, distType):
 
 
 if (__name__ == "__main__"):
-    shapeFilePath = sys.argv[1]
-    distType = str(sys.argv[2])
-    main(shapeFilePath, distType)
+    shapeFile = randomShapeFilePath()
+    print(shapeFile)
+    distType = str(sys.argv[1])
+    main(shapeFile, distType)
