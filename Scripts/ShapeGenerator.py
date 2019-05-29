@@ -7,7 +7,7 @@ import matplotlib.pyplot as plt
 
 def randomNumber(type):
     return {
-        'standard-normal': np.random.standard_normal(3),
+        'standard-normal': np.random.standard_normal(),
         'triangular': np.random.triangular(-2.1, 2.3, 2.5)
     }.get(type, np.random.uniform(-2.1, 2.5))
 
@@ -68,5 +68,7 @@ def main(shapeFilePath, distType):
 if (__name__ == "__main__"):
     shapeFile = randomShapeFilePath()
     print(shapeFile)
-    distType = str(sys.argv[1])
+    distType = None
+    if (len(sys.argv) == 2):
+        distType = str(sys.argv[1])
     main(shapeFile, distType)
