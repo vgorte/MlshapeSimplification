@@ -1,12 +1,13 @@
 import sys
-import numpy as np
 import math
+import os, random
+import numpy as np
 import matplotlib.pyplot as plt
 
 
 def randomNumber(type):
     return {
-        'standard-normal': np.random.standard_normal(3),
+        'standard-normal': np.random.standard_normal(),
         'triangular': np.random.triangular(-2.1, 2.3, 2.5)
     }.get(type, np.random.uniform(-2.1, 2.5))
 
@@ -46,6 +47,10 @@ def extractAlteredCoordinates(shape, distType):
     return x, y
 
 
+def randomShapeFilePath():
+    return "../Shapes/" + random.choice(os.listdir("../Shapes"))
+
+
 def main(shapeFilePath, distType):
     shape = np.genfromtxt(shapeFilePath, delimiter=',')
 
@@ -61,6 +66,9 @@ def main(shapeFilePath, distType):
 
 
 if (__name__ == "__main__"):
-    shapeFilePath = sys.argv[1]
-    distType = str(sys.argv[2])
-    main(shapeFilePath, distType)
+    shapeFile = randomShapeFilePath()
+    print(shapeFile)
+    distType = None
+    if (len(sys.argv) == 2):
+        distType = str(sys.argv[1])
+    main(shapeFile, distType)
