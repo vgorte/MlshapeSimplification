@@ -32,13 +32,20 @@ def computeAngle(first, second, third):
 def findAngles(shape):
     result = []
     i = 0
-    while i < len(shape) - 3:
+    while i < len(shape) - 2:
         first = shape[i] 
         second = shape[i+1]
         third = shape[i+2]
         angle = computeAngle(first,second,third)
         result.append(angle)
         i += 1
+    
+    first = shape[i] 
+    second = shape[i+1]
+    third = shape[1]
+    angle = computeAngle(first,second,third)
+    result.append(angle)
+    
     return result
 
 def main():
