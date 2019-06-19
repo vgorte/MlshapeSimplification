@@ -24,9 +24,9 @@ def computeAngle(first, second, third):
     a = math.pow(P12,2)
     b = math.pow(P13,2)
     c = math.pow(P23,2)
-    d = (a + b + c) / (2 * P12 * P13)
+    d = (a + b - c) / (2 * P12 * P13)
     print(d)
-    angle = np.cos( d )
+    angle = np.arccos( d )
     return angle
     
 def findAngles(shape):
