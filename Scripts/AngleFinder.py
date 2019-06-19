@@ -25,34 +25,37 @@ def computeAngle(first, second, third):
     b = math.pow(P13,2)
     c = math.pow(P23,2)
     d = (a + b - c) / (2 * P12 * P13)
-    print(d)
-    angle = np.arccos( d )
+    #print(d)
+    angle = np.arccos(d)
     return angle
     
 def findAngles(shape):
     result = []
     i = 0
-    while i < len(shape) - 2:
-        first = shape[i] 
-        second = shape[i+1]
-        third = shape[i+2]
+    while i < len(shape) - 1:
+        first = shape[i]
+        second = shape[(i + 1) % 12]
+        third = shape[(i + 2) % 12]
         angle = computeAngle(first,second,third)
         result.append(angle)
         i += 1
-    
-    first = shape[i] 
-    second = shape[i+1]
-    third = shape[1]
-    angle = computeAngle(first,second,third)
-    result.append(angle)
-    
+    return result
+
+def convertRadiansToDegrees(inputArray):
+    result = []
+    for v in inputArray:
+        converted = v * (180/math.pi)
+        result.append(converted)
     return result
 
 def main():
     from numpy import genfromtxt
     shape = genfromtxt('../Shapes/Shape1.csv', delimiter=',')
     angles = findAngles(shape)
+    print('Angles in radians: ')
     print(angles)
+    print('Angles in degrees: ')
+    print(convertRadiansToDegrees(angles))
 
 if (__name__ == "__main__"):
     main()
