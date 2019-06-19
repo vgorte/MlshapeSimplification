@@ -26,10 +26,11 @@ def computeAngle(first, second, third):
 def findAngles(shape):
     result = []
     i = 0
-    while i < len(shape) - 1:
+    actualLength = len(shape) - 1 #ignoring the last entry as its repeatative first point
+    while i < actualLength:
         first = shape[i]
-        second = shape[(i + 1) % 12]
-        third = shape[(i + 2) % 12]
+        second = shape[(i + 1) % actualLength]
+        third = shape[(i + 2) % actualLength]
         angle = computeAngle(first,second,third)
         result.append(angle)
         i += 1
