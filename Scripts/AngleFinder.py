@@ -44,7 +44,7 @@ def convertRadiansToDegrees(inputArray):
     return result
 
 def main(shape):
-    from numpy import genfromtxt
+    #from numpy import genfromtxt
     #shape = genfromtxt('../Shapes/Shape1.csv', delimiter=',')
     shape = shape
     print("shape: " , shape)
