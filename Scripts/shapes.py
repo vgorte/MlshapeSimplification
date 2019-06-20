@@ -8,12 +8,10 @@ Created on Thu Jun 20 15:18:30 2019
 
 def preprocessShapes(infile,outfile):
 
-    stext1 = 'Brid'
-    stext2 = 'No-Bird'
-    stext3 = 'Iris-virginica'
+    stext1 = 'No-Brid'
+    stext2 = 'Bird'
     rtext1 = '0'
     rtext2 = '1'
-    rtext3 = '2'
 
     fid = open(infile,"r")
     oid = open(outfile,"w")
@@ -23,44 +21,49 @@ def preprocessShapes(infile,outfile):
             oid.write(s.replace(stext1, rtext1))
         elif s.find(stext2)>-1:
             oid.write(s.replace(stext2, rtext2))
-        elif s.find(stext3)>-1:
-            oid.write(s.replace(stext3, rtext3))
     fid.close()
     oid.close()
 
 import numpy as np
-# Preprocessor to remove the test (only needed once)
-#preprocessIris('/Users/srmarsla/Book/Datasets/Iris/iris.data','iris_proc.data')
 
-shapes = np.loadtxt('iris_proc.data',delimiter=',')
-shapes[:,:4] = shapes[:,:4]-shapes[:,:4].mean(axis=0)
-imax = np.concatenate((shapes.max(axis=0)*np.ones((1,5)),np.abs(shapes.min(axis=0)*np.ones((1,5)))),axis=0).max(axis=0)
-shapes[:,:4] = shapes[:,:4]/imax[:4]
-print (shapes[0:5,:])
+######     create Dataset     #####
+import ShapeGenerator as sG
+
+#sG.createDataset()
+
+#####
+angles = np.loadtxt('angles.data',delimiter=',')
+
+print(angles)
+angles[:,:12] = angles[:,:12]-angles[:,:12].mean(axis=0)
+print(angles)
+imax = np.concatenate((angles.max(axis=0)*np.ones((1,13)),np.abs(angles.min(axis=0)*np.ones((1,13)))),axis=0).max(axis=0)
+angles[:,:12] = angles[:,:12]/imax[:12]
+print (angles[0:13,:])
 
 # Split into training, validation, and test sets
-target = np.zeros((np.shape(shapes)[0],3));
-indices = np.where(shapes[:,4]==0) 
+target = np.zeros((np.shape(angles)[0],3));
+indices = np.where(angles[:,12]==0) 
 target[indices,0] = 1
-indices = np.where(shapes[:,4]==1)
+indices = np.where(angles[:,12]==1)
 target[indices,1] = 1
-indices = np.where(shapes[:,4]==2)
-target[indices,2] = 1
+
 
 # Randomly order the data
-order = list(range(np.shape(shapes)[0]))
+order = list(range(np.shape(angles)[0]))
 np.random.shuffle(order)
-shapes = shapes[order,:]
+angles = angles[order,:]
 target = target[order,:]
 
-train = shapes[::2,0:4]
+train = angles[::2,0:12]
 traint = target[::2]
-valid = shapes[1::4,0:4]
-validt = target[1::4]
-test = shapes[3::4,0:4]
-testt = target[3::4]
+valid = angles[1::12,0:12]
+validt = target[1::12]
+test = angles[3::12,0:12]
+testt = target[3::12]
 
 #print train.max(axis=0), train.min(axis=0)
+
 
 # Train the network
 import mlp
