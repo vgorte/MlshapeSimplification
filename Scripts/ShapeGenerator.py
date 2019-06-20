@@ -3,7 +3,9 @@ import math
 import os, random
 import numpy as np
 import matplotlib.pyplot as plt
+import csv
 
+import AngleFinder as AF
 
 def randomNumber(type):
     return {
@@ -48,16 +50,23 @@ def extractAlteredCoordinates(shape, distType):
 
 
 def randomShapeFilePath():
-    return "../Shapes/" + random.choice(os.listdir("../Shapes"))
+    #return "../Shapes/" + random.choice(os.listdir("../Shapes"))
+    return "../Shapes/Shape7.csv"
 
 
 def main(shapeFilePath, distType):
-    shape = np.genfromtxt(shapeFilePath, delimiter=',')
+    
+    xy2DArrayGenerater = saveXYCoor(shapeFilePath, distType)
+    xy2DArrayConvertingToAngles = convertToAngles(xy2DArrayGenerater)
+    print(xy2DArrayConvertingToAngles)
 
+    shape = np.genfromtxt(shapeFilePath, delimiter=',')
+        
     x, y = extractAlteredCoordinates(shape, distType)
     xo, yo = findRotationCenter(x, y)
     rad = randomRadian()
     xr, yr = rotate(x, y, xo, yo, rad)
+
 
     plt.plot(xr, yr)
     plt.axis('off')
@@ -65,6 +74,37 @@ def main(shapeFilePath, distType):
     plt.show()
 
 
+#function that generate x/y coordinates and save them in a 2D array
+def saveXYCoor(shapeFilePath, distType):
+    resultXY=[]
+    #generate random shapes/corners --> for later improvement for loop (run 30 times)
+    for xnum in range(1):
+        shape = np.genfromtxt(shapeFilePath, delimiter=',')
+    
+        x, y = extractAlteredCoordinates(shape, distType)
+        xo, yo = findRotationCenter(x, y)
+        rad = randomRadian()
+        xr, yr = rotate(x, y, xo, yo, rad)
+
+        i=0
+        #save xr and yr coordinates in a 2D array
+        while i < len(xr):
+            temp = [xr[i], yr[i]]
+            resultXY.append(temp)
+            i+=1
+
+        #print(resultXY)
+        return resultXY
+
+
+#function that call the AngleFinder script to calculate the angle of the random corners
+def convertToAngles(XYinput):
+    
+    result =  AF.main(XYinput)
+    return result
+
+
+#run the main
 if (__name__ == "__main__"):
     shapeFile = randomShapeFilePath()
     print(shapeFile)
