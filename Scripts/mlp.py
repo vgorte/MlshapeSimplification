@@ -3,8 +3,10 @@
 """
 Created on Thu Jun 20 13:21:01 2019
 
-@author: Albert
+@author: Albert 
 """
+
+
 
 
 # Code from Chapter 4 of Machine Learning: An Algorithmic Perspective (2nd Edition)
