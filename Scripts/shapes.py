@@ -26,12 +26,8 @@ def preprocessShapes(infile,outfile):
 
 import numpy as np
 
-######     create Dataset     #####
-import ShapeGenerator as sG
 
-#sG.createDataset()
 
-#####
 angles = np.loadtxt('angles.data',delimiter=',')
 
 print(angles)

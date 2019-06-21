@@ -50,28 +50,52 @@ def extractAlteredCoordinates(shape, distType):
 
 
 def randomShapeFilePath():
-    #return "../Shapes/" + random.choice(os.listdir("../Shapes"))
-    return "../Shapes/Shape7.csv"
-
-
-def main(shapeFilePath, distType):
+    return "../Shapes/" + random.choice(os.listdir("../Shapes"))
     
-    xy2DArrayGenerater = saveXYCoor(shapeFilePath, distType)
-    xy2DArrayConvertingToAngles = convertToAngles(xy2DArrayGenerater)
-    print(xy2DArrayConvertingToAngles)
+def corssFilePath():
+    return "../crossShapes/Shape7.csv"
 
-    shape = np.genfromtxt(shapeFilePath, delimiter=',')
+
+def main(crossPath, shapeFilePath, distType):
+    for i in range(30):
+        print(i)
+        xy2DArrayGenerater = saveXYCoor(crossPath, distType)
+        xy2DArrayConvertingToAngles = convertToAngles(xy2DArrayGenerater)
+        print(xy2DArrayConvertingToAngles)
+    
+    
+    
+        #plt.plot(xr, yr)
+        #plt.axis('off')
+        #plt.savefig('filename.png', bbox_inches='tight')
+        #plt.show()
         
-    x, y = extractAlteredCoordinates(shape, distType)
-    xo, yo = findRotationCenter(x, y)
-    rad = randomRadian()
-    xr, yr = rotate(x, y, xo, yo, rad)
-
-
-    plt.plot(xr, yr)
-    plt.axis('off')
-    plt.savefig('filename.png', bbox_inches='tight')
-    plt.show()
+        createDataset(xy2DArrayConvertingToAngles,"0")
+        
+    for i in range(30):
+        
+        shape = np.genfromtxt(shapeFilePath, delimiter=',')
+            
+        x, y = extractAlteredCoordinates(shape, distType)
+        xo, yo = findRotationCenter(x, y)
+        rad = randomRadian()
+        xr, yr = rotate(x, y, xo, yo, rad)
+        
+        result=[]
+        i=0
+        #save xr and yr coordinates in a 2D array
+        while i < len(xr):
+            temp = [xr[i], yr[i]]
+            result.append(temp)
+            i+=1
+            
+        cross = convertToAngles(result)
+        
+        createDataset(cross,"1")
+        
+        
+        
+        
 
 
 #function that generate x/y coordinates and save them in a 2D array
@@ -93,22 +117,58 @@ def saveXYCoor(shapeFilePath, distType):
             resultXY.append(temp)
             i+=1
 
-        #print(resultXY)
         return resultXY
 
+def createDataset(inputAngles, categorie):
+   
+    if os.path.isfile('./angles.txt'):
+
+        readFile = open("angles.txt", "r")
+        temp = readFile.read()
+        readFile.close()
+        
+        writeFile = open("angles.txt", "w")
+        writeFile.write("")
+        
+    
+        
+        writeFile.write(temp  +  '\n')
+        
+        for i in inputAngles:     
+            writeFile.write(str(i) + ",")
+        writeFile.write(categorie)
+        
+        writeFile.close()
+            
+        
+    else:
+        writeFile = open("angles.txt", "w")
+        writeFile.write("")
+        
+    
+                
+        for i in inputAngles:     
+            writeFile.write(str(i) + ",")
+        writeFile.write(categorie)
+        writeFile.close()
+           
+        writeFile.close()
+    
+
+
+    
 
 #function that call the AngleFinder script to calculate the angle of the random corners
 def convertToAngles(XYinput):
-    
     result =  AF.main(XYinput)
     return result
 
 
 #run the main
 if (__name__ == "__main__"):
+    crossPath = corssFilePath()
     shapeFile = randomShapeFilePath()
-    print(shapeFile)
     distType = None
     if (len(sys.argv) == 2):
         distType = str(sys.argv[1])
-    main(shapeFile, distType)
+    main(crossPath, shapeFile, distType)

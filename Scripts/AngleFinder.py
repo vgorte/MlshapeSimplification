@@ -46,14 +46,15 @@ def convertRadiansToDegrees(inputArray):
 def main(shape):
     #from numpy import genfromtxt
     #shape = genfromtxt('../Shapes/Shape1.csv', delimiter=',')
-    shape = shape
-    print("shape: " , shape)
+    #print("shape: " , shape)
     angles = findAngles(shape)
+    return angles
     
-    print('Angles in radians: ')
-    print(angles)
-    print('Angles in degrees: ')
-    print(convertRadiansToDegrees(angles))
-
+    #print('Angles in radians: ')
+    #print(angles)
+    #print('Angles in degrees: ')
+    #print(convertRadiansToDegrees(angles))
+    print("Angles Computed")
+    
 if (__name__ == "__main__"):
     main()
