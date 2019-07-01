@@ -38,8 +38,8 @@ angles[:,:12] = angles[:,:12]/imax[:12]
 print (angles[0:13,:])
 
 # Split into training, validation, and test sets
-target = np.zeros((np.shape(angles)[0],3));
-indices = np.where(angles[:,12]==0) 
+target = np.zeros((np.shape(angles)[0],2))
+indices = np.where(angles[:,12]==0)
 target[indices,0] = 1
 indices = np.where(angles[:,12]==1)
 target[indices,1] = 1
@@ -51,12 +51,12 @@ np.random.shuffle(order)
 angles = angles[order,:]
 target = target[order,:]
 
-train = angles[::2,0:12]
+train = angles[::2,0:4]
 traint = target[::2]
-valid = angles[1::12,0:12]
-validt = target[1::12]
-test = angles[3::12,0:12]
-testt = target[3::12]
+valid = angles[1::4,0:4]
+validt = target[1::4]
+test = angles[3::4,0:4]
+testt = target[3::4]
 
 #print train.max(axis=0), train.min(axis=0)
 
