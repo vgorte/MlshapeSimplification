@@ -55,9 +55,12 @@ def randomShapeFilePath():
 def corssFilePath():
     return "../crossShapes/Shape7.csv"
 
+def getRealBirdShape(i):
+    return "../Shapes/BirdData/csv/{}.csv".format(i)
+
 
 def main(crossPath, shapeFilePath, distType):
-    for i in range(30):
+    for i in range(34):
         print(i)
         xy2DArrayGenerater = saveXYCoor(crossPath, distType)
         xy2DArrayConvertingToAngles = convertToAngles(xy2DArrayGenerater)
@@ -72,9 +75,9 @@ def main(crossPath, shapeFilePath, distType):
         
         createDataset(xy2DArrayConvertingToAngles,"0")
         
-    for i in range(30):
-        
-        shape = np.genfromtxt(shapeFilePath, delimiter=',')
+    for i in range(34):
+        path = getRealBirdShape(i+1)
+        shape = np.genfromtxt(path, delimiter=',')
             
         x, y = extractAlteredCoordinates(shape, distType)
         xo, yo = findRotationCenter(x, y)
@@ -121,13 +124,13 @@ def saveXYCoor(shapeFilePath, distType):
 
 def createDataset(inputAngles, categorie):
    
-    if os.path.isfile('./angles.txt'):
+    if os.path.isfile('./angles_v2.txt'):
 
-        readFile = open("angles.txt", "r")
+        readFile = open("angles_v2.txt", "r")
         temp = readFile.read()
         readFile.close()
         
-        writeFile = open("angles.txt", "w")
+        writeFile = open("angles_v2.txt", "w")
         writeFile.write("")
         
     
@@ -142,7 +145,7 @@ def createDataset(inputAngles, categorie):
             
         
     else:
-        writeFile = open("angles.txt", "w")
+        writeFile = open("angles_v2.txt", "w")
         writeFile.write("")
         
     

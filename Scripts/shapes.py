@@ -28,7 +28,7 @@ import numpy as np
 
 
 
-angles = np.loadtxt('angles.data',delimiter=',')
+angles = np.loadtxt('angles_v2.txt',delimiter=',')
 
 print(angles)
 angles[:,:12] = angles[:,:12]-angles[:,:12].mean(axis=0)
@@ -63,6 +63,6 @@ testt = target[3::4]
 
 # Train the network
 import mlp
-net = mlp.mlp(train,traint,5,outtype='logistic')
+net = mlp.mlp(train,traint,10, 5,outtype='softmax')
 net.earlystopping(train,traint,valid,validt,0.1)
 net.confmat(test,testt)
