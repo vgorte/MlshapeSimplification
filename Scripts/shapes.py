@@ -2,13 +2,13 @@
 """
 Created on Thu Jun 20 15:18:30 2019
 
-@author: Raoul
+@author: Raoul, Anna
 """
 
 
 def preprocessShapes(infile,outfile):
 
-    stext1 = 'No-Brid'
+    stext1 = 'No-Bird'
     stext2 = 'Bird'
     rtext1 = '0'
     rtext2 = '1'
@@ -25,6 +25,7 @@ def preprocessShapes(infile,outfile):
     oid.close()
 
 import numpy as np
+np.random.seed(38)
 
 
 
@@ -35,7 +36,7 @@ angles[:,:12] = angles[:,:12]-angles[:,:12].mean(axis=0)
 print(angles)
 imax = np.concatenate((angles.max(axis=0)*np.ones((1,13)),np.abs(angles.min(axis=0)*np.ones((1,13)))),axis=0).max(axis=0)
 angles[:,:12] = angles[:,:12]/imax[:12]
-print (angles[0:13,:])
+print(angles[0:13,:])
 
 # Split into training, validation, and test sets
 target = np.zeros((np.shape(angles)[0],2))
@@ -59,7 +60,6 @@ test = angles[3::4,0:4]
 testt = target[3::4]
 
 #print train.max(axis=0), train.min(axis=0)
-
 
 # Train the network
 import mlp

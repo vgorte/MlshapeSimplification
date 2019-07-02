@@ -75,7 +75,7 @@ def main(crossPath, shapeFilePath, distType):
         
         createDataset(xy2DArrayConvertingToAngles,"0")
         
-    for i in range(34):
+    for i in range(33):
         path = getRealBirdShape(i+1)
         shape = np.genfromtxt(path, delimiter=',')
             
