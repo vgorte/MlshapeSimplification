@@ -65,4 +65,21 @@ testt = target[3::4]
 import mlp
 net = mlp.mlp(train,traint,10, 5,outtype='softmax')
 net.earlystopping(train,traint,valid,validt,0.1)
+net.saveModel("./model.pkl")
 net.confmat(test,testt)
+
+
+# Test on some other data
+net2 = mlp.mlp.loadModel("./model.pkl")
+test_data = np.loadtxt('angles_test.txt',delimiter=',')
+order2 = list(range(np.shape(test_data)[0]))
+np.random.shuffle(order2)
+test_target = np.zeros((np.shape(test_data)[0],2))
+
+test_data = test_data[order2,:]
+test_target= target[order2,:]
+
+test_data = test_data[::2,0:4]
+test_target = test_target[::2]
+
+net2.confmat(test_data, test_target)

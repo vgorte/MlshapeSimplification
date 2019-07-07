@@ -19,6 +19,8 @@ Created on Thu Jun 20 13:21:01 2019
 # Stephen Marsland, 2008, 2014
 
 import numpy as np
+import os
+import pickle
 
 class mlp:
     """ A Multi-Layer Perceptron"""
@@ -102,11 +104,11 @@ class mlp:
     def mlpfwd(self,inputs):
         """ Run the network forward """
 
-        self.hidden = np.dot(inputs,self.weights1);
+        self.hidden = np.dot(inputs,self.weights1)
         self.hidden = 1.0/(1.0+np.exp(-self.beta*self.hidden))
         self.hidden = np.concatenate((self.hidden,-np.ones((np.shape(inputs)[0],1))),axis=1)
 
-        outputs = np.dot(self.hidden,self.weights2);
+        outputs = np.dot(self.hidden,self.weights2)
 
         # Different types of output neurons
         if self.outtype == 'linear':
@@ -145,7 +147,13 @@ class mlp:
         print (cm)
         print ("Percentage Correct: ",np.trace(cm)/np.sum(cm)*100)
         
+    
+    def saveModel(self, path):
+        pickle.dump(self, open(path, "wb"))
         
+    @staticmethod
+    def loadModel(path):
+        return pickle.load(open(path, "rb"))
         
         
         
