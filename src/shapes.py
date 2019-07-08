@@ -8,7 +8,7 @@ Created on Thu Jun 20 15:18:30 2019
 import numpy as np
 
 np.random.seed(38)
-angles = np.loadtxt('angles_v2.txt',delimiter=',')
+angles = np.loadtxt('../assets/angles/angles_v2.txt',delimiter=',')
 
 print(angles)
 angles[:,:12] = angles[:,:12]-angles[:,:12].mean(axis=0)
@@ -44,13 +44,13 @@ testt = target[3::4]
 import mlp
 net = mlp.mlp(train,traint,10, 5,outtype='softmax')
 net.earlystopping(train,traint,valid,validt,0.1)
-net.saveModel("./model.pkl")
+net.saveModel("../assets/blobs/model.pkl")
 net.confmat(test,testt)
 
 
 # Test on some other data
-net2 = mlp.mlp.loadModel("./model.pkl")
-test_data = np.loadtxt('angles_test.txt',delimiter=',')
+net2 = mlp.mlp.loadModel("../assets/blobs/model.pkl")
+test_data = np.loadtxt('../assets/angles/angles_test.txt',delimiter=',')
 order2 = list(range(np.shape(test_data)[0]))
 np.random.shuffle(order2)
 test_target = np.zeros((np.shape(test_data)[0],2))
