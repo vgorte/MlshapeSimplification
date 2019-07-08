@@ -4,8 +4,8 @@ import os, random
 import numpy as np
 import matplotlib.pyplot as plt
 import csv
-
-import AngleFinder as AF
+import angleFinder
+from utilities import getFileNamesFromDirectory
 
 def randomNumber(type):
     return {
@@ -13,12 +13,10 @@ def randomNumber(type):
         'triangular': np.random.triangular(-2.1, 2.3, 2.5)
     }.get(type, np.random.uniform(-2.1, 2.5))
 
-
 def randomRadian():
     deg = np.random.uniform(0, 360, 1)
     radian = deg * (math.pi / 180)
     return radian
-
 
 def findRotationCenter(x, y):
     x_sorted = sorted(x)
@@ -27,7 +25,6 @@ def findRotationCenter(x, y):
     centerY = np.int(y_sorted[-1]) - np.int(y_sorted[0])
     return centerX, centerY
 
-
 def rotate(x, y, xo, yo, theta):  # rotate x,y around xo,yo by theta (rad)
     xr, yr = [], []
 
@@ -35,7 +32,6 @@ def rotate(x, y, xo, yo, theta):  # rotate x,y around xo,yo by theta (rad)
         xr.append(math.cos(theta) * (x[i] - xo) - math.sin(theta) * (y[i] - yo) + xo)
         yr.append(math.sin(theta) * (x[i] - xo) + math.cos(theta) * (y[i] - yo) + yo)
     return xr, yr
-
 
 def extractAlteredCoordinates(shape, distType):
     x, y = [], []
@@ -48,12 +44,12 @@ def extractAlteredCoordinates(shape, distType):
     y[len(y) - 1] = y[0]
     return x, y
 
-
 def randomShapeFilePath():
-    return "../Shapes/" + random.choice(os.listdir("../Shapes"))
+    dir = "../resources/shapes"
+    return os.path.join(dir, random.choice(getFileNamesFromDirectory(dir)))
     
-def corssFilePath():
-    return "../crossShapes/Shape7.csv"
+def crossFilePath():
+    return "../resources/shapes/crossShapes/shape7.csv"
 
 def getRealBirdShape(i):
     return "../Shapes/BirdData/csv/{}.csv".format(i)
@@ -163,13 +159,13 @@ def createDataset(inputAngles, categorie):
 
 #function that call the AngleFinder script to calculate the angle of the random corners
 def convertToAngles(XYinput):
-    result =  AF.main(XYinput)
+    result = angleFinder.findAngles(XYinput)
     return result
 
 
 #run the main
 if (__name__ == "__main__"):
-    crossPath = corssFilePath()
+    crossPath = crossFilePath()
     shapeFile = randomShapeFilePath()
     distType = None
     if (len(sys.argv) == 2):

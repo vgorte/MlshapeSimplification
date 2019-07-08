@@ -1,7 +1,15 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""
+Created on Thu Jun 20 13:21:01 2019
+
+@author: Raul, Saad 
+"""
+
 import math
 import numpy as np
 
-def computeLength(P1, P2):    
+def computeLength(P1, P2):  
     x1 = P1[0]
     y1 = P1[1]
     x2 = P2[0]
@@ -34,26 +42,3 @@ def findAngles(shape):
         result.append(angle)
         i += 1
     return result
-
-def convertRadiansToDegrees(inputArray):
-    result = []
-    for v in inputArray:
-        converted = v * (180/math.pi)
-        result.append(converted)
-    return result
-
-def main(shape):
-    #from numpy import genfromtxt
-    #shape = genfromtxt('../Shapes/Shape1.csv', delimiter=',')
-    #print("shape: " , shape)
-    angles = findAngles(shape)
-    return angles
-    
-    #print('Angles in radians: ')
-    #print(angles)
-    #print('Angles in degrees: ')
-    #print(convertRadiansToDegrees(angles))
-    print("Angles Computed")
-    
-if (__name__ == "__main__"):
-    main()
