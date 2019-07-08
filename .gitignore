@@ -104,3 +104,6 @@ venv.bak/
 .mypy_cache/
 Scripts/.DS_Store
 .DS_Store
+
+# project specific
+*.pkl
