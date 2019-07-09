@@ -7,8 +7,8 @@ Created on Thu Jun 20 15:18:30 2019
 
 import numpy as np
 
-np.random.seed(38)
-angles = np.loadtxt('../assets/angles/angles_v2.txt',delimiter=',')
+np.random.seed(33)
+angles = np.loadtxt('../assets/angles/angles_v3.txt',delimiter=',')
 
 print(angles)
 angles[:,:12] = angles[:,:12]-angles[:,:12].mean(axis=0)
@@ -51,6 +51,11 @@ net.confmat(test,testt)
 # Test on some other data
 net2 = mlp.mlp.loadModel("../assets/blobs/model.pkl")
 test_data = np.loadtxt('../assets/angles/angles_test.txt',delimiter=',')
+test_data[:,:12] = test_data[:,:12]-test_data[:,:12].mean(axis=0)
+
+imax2 = np.concatenate((test_data.max(axis=0)*np.ones((1,13)),np.abs(test_data.min(axis=0)*np.ones((1,13)))),axis=0).max(axis=0)
+test_data[:,:12] = test_data[:,:12]/imax2[:12]
+
 order2 = list(range(np.shape(test_data)[0]))
 np.random.shuffle(order2)
 test_target = np.zeros((np.shape(test_data)[0],2))

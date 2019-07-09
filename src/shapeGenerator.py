@@ -10,8 +10,8 @@ from utilities import getFileNamesFromDirectory
 def randomNumber(type):
     return {
         'standard-normal': np.random.standard_normal(),
-        'triangular': np.random.triangular(-2.1, 2.3, 2.5)
-    }.get(type, np.random.uniform(-2.1, 2.5))
+        'triangular': np.random.triangular(-40.1, 40.3, 40.5)
+    }.get(type, np.random.uniform(-20.1, 20.5))
 
 def randomRadian():
     deg = np.random.uniform(0, 360, 1)
@@ -25,7 +25,7 @@ def findRotationCenter(x, y):
     centerY = np.int(y_sorted[-1]) - np.int(y_sorted[0])
     return centerX, centerY
 
-def rotate(x, y, xo, yo, theta):  # rotate x,y around xo,yo by theta (rad)
+def rotate(x, y, xo, yo, theta): # rotate x,y around xo,yo by theta (rad)
     xr, yr = [], []
 
     for i in range(len(x)):
@@ -109,23 +109,10 @@ def convertToAngles(XYinput):
     return result
 
 def main(crossPath, shapeFilePath, outFilePath, distType):
-    for i in range(34):
-        print(i)
-        xy2DArrayGenerater = saveXYCoor(crossPath, distType)
-        xy2DArrayConvertingToAngles = convertToAngles(xy2DArrayGenerater)
-        print(xy2DArrayConvertingToAngles)
-        
-        #plt.plot(xr, yr)
-        #plt.axis('off')
-        #plt.savefig('filename.png', bbox_inches='tight')
-        #plt.show()
-        
-        createDataset(xy2DArrayConvertingToAngles,"0", outFilePath)
-        
     for i in range(33):
-        path = getRealBirdShape(i+1)
-        shape = np.genfromtxt(path, delimiter=',')
-            
+        print(i)
+        shape = np.genfromtxt(crossPath, delimiter=',')
+
         x, y = extractAlteredCoordinates(shape, distType)
         xo, yo = findRotationCenter(x, y)
         rad = randomRadian()
@@ -138,17 +125,40 @@ def main(crossPath, shapeFilePath, outFilePath, distType):
             temp = [xr[i], yr[i]]
             result.append(temp)
             i+=1
-            
-        cross = convertToAngles(result)
         
-        createDataset(cross,"1", outFilePath)
+        # # visualization
+        # plt.plot(xr, yr)
+        # plt.axis('off')
+        # plt.show()
+
+        crossShapes = convertToAngles(result)
+        createDataset(crossShapes,"0", outFilePath)
+        
+    for i in range(33):
+        path = getRealBirdShape(i+1)
+        shape = np.genfromtxt(path, delimiter=',')
+
+        # # visualization
+        # x, y = [], []
+        # for v in shape:
+        #     x.append(np.int(v[0]))
+        #     y.append(np.int(v[1]))
+
+        # plt.plot(x, y)
+        # plt.axis('off')
+        # plt.savefig('filename.png', bbox_inches='tight')
+        # plt.show()
+            
+        birdAngles = convertToAngles(shape)
+        
+        createDataset(birdAngles,"1", outFilePath)
 
 #run the main
 if (__name__ == "__main__"):
     crossPath = crossFilePath()
     shapeFile = randomShapeFilePath()
-    outFilePath = "../assets/angles/angles_v2.txt"
+    outFilePath = "../assets/angles/angles_v3.txt"
     distType = None
     if (len(sys.argv) == 2):
         distType = str(sys.argv[1])
-    main(crossPath, shapeFile, outFilePath, distType)
+    main(crossPath, shapeFile, outFilePath, 'triangular')
