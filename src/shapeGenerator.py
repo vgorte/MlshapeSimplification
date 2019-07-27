@@ -4,21 +4,19 @@ import os, random
 import numpy as np
 import matplotlib.pyplot as plt
 import csv
-
-import AngleFinder as AF
+import angleFinder
+from utilities import getFileNamesFromDirectory
 
 def randomNumber(type):
     return {
         'standard-normal': np.random.standard_normal(),
-        'triangular': np.random.triangular(-2.1, 2.3, 2.5)
-    }.get(type, np.random.uniform(-2.1, 2.5))
-
+        'triangular': np.random.triangular(-40.1, 40.3, 40.5)
+    }.get(type, np.random.uniform(-20.1, 20.5))
 
 def randomRadian():
     deg = np.random.uniform(0, 360, 1)
     radian = deg * (math.pi / 180)
     return radian
-
 
 def findRotationCenter(x, y):
     x_sorted = sorted(x)
@@ -27,15 +25,13 @@ def findRotationCenter(x, y):
     centerY = np.int(y_sorted[-1]) - np.int(y_sorted[0])
     return centerX, centerY
 
-
-def rotate(x, y, xo, yo, theta):  # rotate x,y around xo,yo by theta (rad)
+def rotate(x, y, xo, yo, theta): # rotate x,y around xo,yo by theta (rad)
     xr, yr = [], []
 
     for i in range(len(x)):
         xr.append(math.cos(theta) * (x[i] - xo) - math.sin(theta) * (y[i] - yo) + xo)
         yr.append(math.sin(theta) * (x[i] - xo) + math.cos(theta) * (y[i] - yo) + yo)
     return xr, yr
-
 
 def extractAlteredCoordinates(shape, distType):
     x, y = [], []
@@ -48,58 +44,15 @@ def extractAlteredCoordinates(shape, distType):
     y[len(y) - 1] = y[0]
     return x, y
 
-
 def randomShapeFilePath():
-    return "../Shapes/" + random.choice(os.listdir("../Shapes"))
+    dir = "../resources/shapes"
+    return os.path.join(dir, random.choice(getFileNamesFromDirectory(dir)))
     
-def corssFilePath():
-    return "../crossShapes/Shape7.csv"
+def crossFilePath():
+    return "../resources/shapes/crossShapes/shape7.csv"
 
 def getRealBirdShape(i):
-    return "../Shapes/BirdData/csv/{}.csv".format(i)
-
-
-def main(crossPath, shapeFilePath, distType):
-    for i in range(34):
-        print(i)
-        xy2DArrayGenerater = saveXYCoor(crossPath, distType)
-        xy2DArrayConvertingToAngles = convertToAngles(xy2DArrayGenerater)
-        print(xy2DArrayConvertingToAngles)
-    
-    
-    
-        #plt.plot(xr, yr)
-        #plt.axis('off')
-        #plt.savefig('filename.png', bbox_inches='tight')
-        #plt.show()
-        
-        createDataset(xy2DArrayConvertingToAngles,"0")
-        
-    for i in range(33):
-        path = getRealBirdShape(i+1)
-        shape = np.genfromtxt(path, delimiter=',')
-            
-        x, y = extractAlteredCoordinates(shape, distType)
-        xo, yo = findRotationCenter(x, y)
-        rad = randomRadian()
-        xr, yr = rotate(x, y, xo, yo, rad)
-        
-        result=[]
-        i=0
-        #save xr and yr coordinates in a 2D array
-        while i < len(xr):
-            temp = [xr[i], yr[i]]
-            result.append(temp)
-            i+=1
-            
-        cross = convertToAngles(result)
-        
-        createDataset(cross,"1")
-        
-        
-        
-        
-
+    return "../resources/shapes/birdData/{}.csv".format(i)
 
 #function that generate x/y coordinates and save them in a 2D array
 def saveXYCoor(shapeFilePath, distType):
@@ -122,34 +75,27 @@ def saveXYCoor(shapeFilePath, distType):
 
         return resultXY
 
-def createDataset(inputAngles, categorie):
-   
-    if os.path.isfile('./angles_v2.txt'):
+def createDataset(inputAngles, categorie, filePath):
 
-        readFile = open("angles_v2.txt", "r")
+    if os.path.isfile(filePath):
+        readFile = open(filePath, "r")
         temp = readFile.read()
         readFile.close()
         
-        writeFile = open("angles_v2.txt", "w")
+        writeFile = open(filePath, "w")
         writeFile.write("")
         
-    
+        writeFile.write(temp + '\n')
         
-        writeFile.write(temp  +  '\n')
-        
-        for i in inputAngles:     
+        for i in inputAngles:
             writeFile.write(str(i) + ",")
         writeFile.write(categorie)
         
         writeFile.close()
-            
-        
     else:
-        writeFile = open("angles_v2.txt", "w")
+        writeFile = open(filePath, "w")
         writeFile.write("")
-        
-    
-                
+
         for i in inputAngles:     
             writeFile.write(str(i) + ",")
         writeFile.write(categorie)
@@ -157,21 +103,62 @@ def createDataset(inputAngles, categorie):
            
         writeFile.close()
     
-
-
-    
-
 #function that call the AngleFinder script to calculate the angle of the random corners
 def convertToAngles(XYinput):
-    result =  AF.main(XYinput)
+    result = angleFinder.findAngles(XYinput)
     return result
 
+def main(crossPath, shapeFilePath, outFilePath, distType):
+    for i in range(33):
+        print(i)
+        shape = np.genfromtxt(crossPath, delimiter=',')
+
+        x, y = extractAlteredCoordinates(shape, distType)
+        xo, yo = findRotationCenter(x, y)
+        rad = randomRadian()
+        xr, yr = rotate(x, y, xo, yo, rad)
+        
+        result=[]
+        i=0
+        #save xr and yr coordinates in a 2D array
+        while i < len(xr):
+            temp = [xr[i], yr[i]]
+            result.append(temp)
+            i+=1
+        
+        # # visualization
+        # plt.plot(xr, yr)
+        # plt.axis('off')
+        # plt.show()
+
+        crossShapes = convertToAngles(result)
+        createDataset(crossShapes,"0", outFilePath)
+        
+    for i in range(33):
+        path = getRealBirdShape(i+1)
+        shape = np.genfromtxt(path, delimiter=',')
+
+        # # visualization
+        # x, y = [], []
+        # for v in shape:
+        #     x.append(np.int(v[0]))
+        #     y.append(np.int(v[1]))
+
+        # plt.plot(x, y)
+        # plt.axis('off')
+        # plt.savefig('filename.png', bbox_inches='tight')
+        # plt.show()
+            
+        birdAngles = convertToAngles(shape)
+        
+        createDataset(birdAngles,"1", outFilePath)
 
 #run the main
 if (__name__ == "__main__"):
-    crossPath = corssFilePath()
+    crossPath = crossFilePath()
     shapeFile = randomShapeFilePath()
+    outFilePath = "../assets/angles/angles_v3.txt"
     distType = None
     if (len(sys.argv) == 2):
         distType = str(sys.argv[1])
-    main(crossPath, shapeFile, distType)
+    main(crossPath, shapeFile, outFilePath, 'triangular')

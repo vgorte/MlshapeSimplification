@@ -5,31 +5,10 @@ Created on Thu Jun 20 15:18:30 2019
 @author: Raoul, Anna
 """
 
-
-def preprocessShapes(infile,outfile):
-
-    stext1 = 'No-Bird'
-    stext2 = 'Bird'
-    rtext1 = '0'
-    rtext2 = '1'
-
-    fid = open(infile,"r")
-    oid = open(outfile,"w")
-
-    for s in fid:
-        if s.find(stext1)>-1:
-            oid.write(s.replace(stext1, rtext1))
-        elif s.find(stext2)>-1:
-            oid.write(s.replace(stext2, rtext2))
-    fid.close()
-    oid.close()
-
 import numpy as np
-np.random.seed(38)
 
-
-
-angles = np.loadtxt('angles_v2.txt',delimiter=',')
+np.random.seed(33)
+angles = np.loadtxt('../assets/angles/angles_v3.txt',delimiter=',')
 
 print(angles)
 angles[:,:12] = angles[:,:12]-angles[:,:12].mean(axis=0)
@@ -65,13 +44,18 @@ testt = target[3::4]
 import mlp
 net = mlp.mlp(train,traint,10, 5,outtype='softmax')
 net.earlystopping(train,traint,valid,validt,0.1)
-net.saveModel("./model.pkl")
+net.saveModel("../assets/blobs/model.pkl")
 net.confmat(test,testt)
 
 
 # Test on some other data
-net2 = mlp.mlp.loadModel("./model.pkl")
-test_data = np.loadtxt('angles_test.txt',delimiter=',')
+net2 = mlp.mlp.loadModel("../assets/blobs/model.pkl")
+test_data = np.loadtxt('../assets/angles/angles_test.txt',delimiter=',')
+test_data[:,:12] = test_data[:,:12]-test_data[:,:12].mean(axis=0)
+
+imax2 = np.concatenate((test_data.max(axis=0)*np.ones((1,13)),np.abs(test_data.min(axis=0)*np.ones((1,13)))),axis=0).max(axis=0)
+test_data[:,:12] = test_data[:,:12]/imax2[:12]
+
 order2 = list(range(np.shape(test_data)[0]))
 np.random.shuffle(order2)
 test_target = np.zeros((np.shape(test_data)[0],2))
